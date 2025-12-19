@@ -1,0 +1,95 @@
+how do u communicate 100 servers using ansible? by placing all the Ip Details in inventory file and by exchanging keys we can achieve the communication 
+remove the last 7 days files? A: find /home/abhinav -type f -mtime +7 -delete 
+terraform backend?
+s3 state file?
+jenkins stage and steps?
+handlers and notify in ansible?
+how do u run ansible playbook just as a dry run? ansble-playbook -i abhinav.yaml --check
+ansible vault?
+kubernetes hpa and vpa?
+how would u give read and write access in github for a repo?
+How do u create an alert in Nagios?
+A: go to alerting section in Nagios log server create a alert,choose alert type,Define criteria,notificaton preferences(email),set check interval(5s)
+How do u change the mechid of the server?
+A: vi /etc/machine-id and remove the Contents, upon reboot you will get a new value.
+How do we implement load balancing among different services in the application?
+A: For this we have an ALB sitting in front and then followed by an ingress controller and the ingress resource defined with all the hosts and paths
+acts as an lb between cluster and endpoint and this creates a ALB in aws with all the required target groups and ip targets that point to the service 
+and via the pod.The general schema looks like:
+client--alb--target grps--service--pods.
+You have provisioned an infra and you have modified the main.tf file by deleting a resource?
+A: At this point terraform will destroy the removed resource from the provider.
+How DNS QUERIES a request for Server IP?
+first when a user types a domain name and hits enter then it first checks for local cache in the machine,if not found queries for ISP DNS if not foun
+d there it will be sent to the Root DNS and obtains the ip for the domain and then connects.
+
+
+---------------------------------------------------------------
+what is service account in k8s?
+which is used to handle user management and role are for permissions for users like get,list,delete,create,etc and role building is used to 
+bind users with a set of permissions. In order to maintain a strong RBAC controls what a svc account can do, it is better to have service accounts and offer only required permissions
+to the user.
+service account is like a user will have a certain permissions either to view pods, followed by other permissions
+
+write a shell script to find out files in sub folders that are named with .logs in all the 3 directories?
+use a for loop/ if condition and this can be acheived.
+what is the process involved in upgrade process and how upgrade was performed in all the nodes?
+taint,cordon and uncordon plays an important role in upgrades.
+the node will be drained first and then first kubeadm will be upgraded and them kubelet and kubectl will be upgraded, once these are been upgraded uncor
+don the node and check for successful upgrade.
+do you faced any errors while mounting the volume and how did you solved them?
+how efs in distinct from EBS?
+pv and pvc's how are they been distinct from each other?
+ingress?
+pod affinity?
+helm install  releasename chartname --version=1.22
+how do u troubleshoot the volume is throughing a error while mounting?
+can you install os on efs? A: NO since we mount efs to multiple servers only for data files and application level activities.
+Can you declare a variable in shell and assign a value?
+int a =10;
+string b="abhinav";
+Can you define a function in shell scripting?
+How do u perform cluster upgardes in K8s?
+A: firstly master will be upgrade like apiserver,scheduler,controller,and in the nodes with kubelet and kubeproxy Drain the node first and then coron it and perform kubeadm upgrade and followed by kubelet and kubectl components, once this is done we will go
+with uncordoning.
+   
+
+How do u rotate certs post cert rotation in which a command is present?
+
+A:az aks rotate-certs --resource-group <resourceGroupName> --name <clusterName>'
+
+                   or
+A: sudo openssl -x509 -in <cert-path> --noout -dates
+   sudo kubeadm certs renew  all
+   sudo kubeadm certs renew api-server
+   sudo kubectl certs renew scheduler
+   sudo systemctl restart kubelet
+   --rotate-certificates=true
+
+
+How do you find the logs of the container that has allready been exited?
+kubectl logs abcde --previous or -p     (logs of a container where and which it has been exited and new one has created and getting logs for
+lastcontainer using --previous or -p
+kubectl logs --tail=10 abcde --since=1hr   (logs particular to last hour)
+
+------------------------------------------------------------------
+cross account access
+
+have 2 accounts in aws
+ki2 --- where we have 2 users abhinav and komal(create them)
+ki3---- where we need to create a arole and select other aws account--- and give other aws account id (12digit)-- you get this from iam link in
+ dashboard(ki2) -- give it here,next-- permissions, here give all permissions what gopal can manage for ex it is a readonly. -- ReadOnlyAccess--Next
+--Next--role name-- crossaccountreadonly--create role. Thus role has been created.
+
+ki2--- goto ki2 aws acc--go to groups--create a group--readonlygrp--next--readonlyaccess--next--create.select group--actions--add users to group--
+select our users--add.
+
+goto aws s3 service in ki3 --create a bucket-- bucket name--abhi--region--next-  
+
+for gopal in ki2 we also need secure token service assume role to be added in order to make a call to ki3.
+go back to group which we have added in ki2--inline policies--click here--policy generator--aws service--aws secutity token service--actions--
+assume role--arn name:*--add-statement--nextstep--apply.
+
+now login with gopal via ki2 and switch role--aacount--ki3s 12 digit id --role --crossaccountreadonly--switch role.-- now gopal will get access to ki3 
+in read only-- goto s3 you find the bucket created over there.
+-------------------------------------------------------------------------------
